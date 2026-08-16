@@ -314,13 +314,6 @@ export default function App() {
   const placeholders = [ideal1, ideal2, ideal3, ideal4];
   const indexProximo = passeios.findIndex((p) => p === '');
 
-  const abrirPlanilhaOculta = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const codigoOculto =
-      'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMVJhSXM2eTRnNHI2VlRBYmM4RWFha0ZvRHNuRkpqRmhxLVg3UE91S3B0SUEvZWRpdD91c3A9ZHJpdmVfd2Vi';
-    window.open(atob(codigoOculto), '_blank', 'noopener,noreferrer');
-  };
-
   const salvarTutor = (nome: Tutor) => {
     setTutor(nome);
     if (nome) localStorage.setItem('canjica_tutor', nome);
@@ -397,13 +390,6 @@ export default function App() {
           />
         ))}
 
-        <button
-          onClick={abrirPlanilhaOculta}
-          className="btn-planilha"
-          type="button"
-        >
-          Link para a planilha
-        </button>
         <button 
         type="button" 
         className="btn-planilha" 
