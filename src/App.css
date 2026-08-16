@@ -1,20 +1,19 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #121214;
   color: #e1e1e6;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
+  background-color: #121214;
   margin: 0;
+  padding: 0;
 }
 .container {
   background-color: #202024;
-  padding: 30px;
+  border: 1px solid #29292e;
   border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
   width: 100%;
   max-width: 420px;
-  border: 1px solid #29292e;
+  padding: 30px;
+  box-shadow: 0 8px 16px #00000080;
+  margin: 0 auto;
 }
 h2 { text-align: center; color: #ff9f43; margin-top: 0; margin-bottom: 25px; }
 
@@ -40,19 +39,41 @@ label { font-weight: bold; color: #323238; transition: color 0.3s; white-space: 
 label.proximo { color: #626262; }
 
 input {
-  flex: 1; min-width: 0; height: 42px; padding: 10px; font-size: 16px;
-  border-radius: 8px; box-sizing: border-box; color: #ff9f43;
-  font-weight: 600; transition: background-color 0.3s, border-color 0.3s;
-  border-top: none; border-left: none; border-right: none;
-  border-bottom: none; margin-right: 10px; background-color: #232323;
+  /* TRÍADE RESPONSIVA: Força o input a esticar e ocupar apenas o espaço vazio */
+  flex: 1;
+  width: 100% !important;
+  min-width: 0 !important; 
+  
+  /* O resto do seu código continua igual */
+  height: 42px;
+  padding: 0 10px !important;
+  font-size: 16px !important;
+  border-radius: 8px;
+  box-sizing: border-box !important;
+  color: #ff9f43;
+  font-weight: 600;
+  transition: background-color 0.3s, border-color 0.3s;
+  border: 1px solid transparent; 
+  background-color: #202024;
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0 !important;
 }
+
 input::placeholder { color: #323238; font-weight: 500; }
 
 label.proximo + input { border-bottom: none; background-color: #29292e; border: 1px solid #323238; }
 label.proximo + input::placeholder { color: #626262; }
-input:focus { outline: none; border: 1px solid #ff9f43; background-color: #1a1a1e; }
+input:focus { 
+  outline: none; 
+  border: 1px solid #ff9f43; 
+  background-color: #1a1a1e;
+  width: 100% !important; /* Garante que a largura se mantém ao clicar */
+}
 input.preenchido { background-color: #202024 !important; border: none !important; }
 input::-webkit-calendar-picker-indicator { display: none !important; -webkit-appearance: none; }
+input::-webkit-datetime-edit-fields-wrapper { padding: 0 !important; }
+input::-webkit-date-and-time-value { margin: 0 !important; }
 
 .btn-icone {
   background-color: #29292e; color: #e1e1e6; border: 1px solid #323238;
