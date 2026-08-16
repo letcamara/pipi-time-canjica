@@ -51,7 +51,7 @@ export const handler: Handler = async (event) => {
       };
     }
 
-    // 🔴 ROTA POST: Salva ou atualiza a rotina
+    // 🔴 ROTA POST: Salva ou atualiza a rotinaa
     if (event.httpMethod === 'POST') {
       const payload = JSON.parse(event.body || '{}');
       
