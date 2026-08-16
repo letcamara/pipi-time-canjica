@@ -209,66 +209,71 @@ export default function App() {
     };
   }, []);
 
-  const enviarPlanilha = (
-    novosPasseios: string[],
-    passoApagado: number | null = null
-  ) => {
+  const enviarPlanilha = () => {
+    // 1. Apontamos para a sua nova API interna da Netlify (Serverless Function)
+  const API_URL = '/api/passeios';
+  
+  const enviarParaBanco = async (passoEditado?: number, ehApagar = false) => {
+    setIsLoading(true);
     setStatus({
-      text: '⏳ Salvando...',
+      text: '⏳ A gravar...',
       class: 'status-salvo status-salvando',
     });
-    setIsLoading(true)
-    const dataOntem = sanitize(localStorage.getItem('canjica_data_ontem'));
-    const ultimoOntem = sanitize(localStorage.getItem('canjica_ultimo_ontem'));
-    let obsOntem = '';
 
-    if (novosPasseios[0] && dataOntem && ultimoOntem) {
-      const [h1, m1] = novosPasseios[0].split(':').map(Number);
-      const [hO, mO] = ultimoOntem.split(':').map(Number);
-      const d1 = new Date();
-      d1.setHours(h1, m1, 0);
-      const dO = new Date();
-      dO.setHours(hO, mO, 0);
-      dO.setDate(dO.getDate() - 1);
+    const t_inicial = tutor === 'Leticia' ? '[L]' : tutor === 'Nassar' ? '[N]' : '';
 
-      const diff = (d1.getTime() - dO.getTime()) / (1000 * 60 * 60);
-      if (diff > 10) {
-        obsOntem = `⚠️ A Canjica ultrapassou o limite e segurou o xixi por ${Math.floor(
-          diff
-        )}h e ${Math.round((diff - Math.floor(diff)) * 60)}m durante a noite!`;
-      }
-    }
+    const formatarCampo = (valor: string, passoAtual: number) => {
+      if (ehApagar && passoAtual === passoEditado) return 'APAGAR';
+      if (valor && isValidTime(valor)) return `${valor} ${t_inicial}`.trim();
+      return '';
+    };
 
-    if (formRef.current) {
-      const form = formRef.current;
-      const scriptOculto =
-        'aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J6bG9Qd09SMzgyVVpWNEJYWVBqb012M2tnZm5kcXZINXJ6UXdGSGJSdm01RjlNRWE2RVgwMDBWbXJ6LUVVakNwV3gvZXhlYw==';
+    // 2. Montamos o pacote de dados limpo em formato JSON
+    const payload = {
+      data: diaHoje,
+      tutor: tutor,
+      p1: formatarCampo(passeios[0], 0),
+      p2: formatarCampo(passeios[1], 1),
+      p3: formatarCampo(passeios[2], 2),
+      p4: formatarCampo(passeios[3], 3),
+      // (Opcional) A lógica de calcular "obs_ontem" que você já tem pode ser passada aqui
+    };
 
-      form.action = atob(scriptOculto);
-
-      (form.elements.namedItem('data') as HTMLInputElement).value = diaHoje;
-      (form.elements.namedItem('tutor') as HTMLInputElement).value =
-        tutor || '';
-
-      novosPasseios.forEach((val, idx) => {
-        const finalVal =
-          passoApagado === idx + 1 ? 'APAGAR' : isValidTime(val) ? val : '';
-        (form.elements.namedItem(`p${idx + 1}`) as HTMLInputElement).value =
-          finalVal;
+    try {
+      // 3. Chamada nativa e moderna, sem necessidade de 'no-cors'
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
       });
 
-      (form.elements.namedItem('data_ontem') as HTMLInputElement).value =
-        dataOntem || '';
-      (form.elements.namedItem('obs_ontem') as HTMLInputElement).value =
-        obsOntem;
+      // 4. Tratamento REAL de resposta do servidor
+      if (!response.ok) {
+        throw new Error('Falha na gravação do banco de dados');
+      }
 
-      form.submit();
+      setStatus({
+        text: 'Salvo na base de dados ✔️',
+        class: 'status-salvo',
+      });
 
       setTimeout(() => {
-        setStatus({ text: 'Salvo na nuvem ✔️', class: 'status-salvo' });
-        setIsLoading(false)
-      }, 1200);
+        setStatus({ text: 'Nuvem atualizada ✔️', class: 'status-salvo' });
+      }, 2500);
+
+    } catch (error) {
+      console.error(error);
+      setStatus({
+        text: '⚠️ Erro de conexão com o banco',
+        class: 'status-salvo',
+      });
+      document.getElementById('status-salvamento')!.style.color = '#ff4d4d';
+    } finally {
+      setIsLoading(false);
     }
+  };
   };
 
   const handleTimeChange = (index: number, val: string) => {
