@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { PasseioItem } from './PasseioItem';
 import './App.css';
 
@@ -268,7 +268,7 @@ export default function App() {
     newP[index] = val;
     setPasseios(newP);
     if (isValidTime(val) || val === '')
-    enviarParaBanco(newP, val === '' ? index + 1 : null);
+    enviarParaBanco(index, false);
   };
 
   const preencherAgora = (index: number) => {
@@ -283,7 +283,7 @@ export default function App() {
     const newP = [...passeios];
     newP[index] = '';
     setPasseios(newP);
-    enviarParaBanco(newP, index + 1);
+    enviarParaBanco(index, true);
   };
 
   const addTime = (
