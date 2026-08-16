@@ -211,8 +211,8 @@ export default function App() {
 
   const enviarPlanilha = () => {
     // 1. Apontamos para a sua nova API interna da Netlify (Serverless Function)
-  const API_URL = '/api/passeios';
-  
+  const API_URL = '/.netlify/functions/passeios';
+
   const enviarParaBanco = async (passoEditado?: number, ehApagar = false) => {
     setIsLoading(true);
     setStatus({

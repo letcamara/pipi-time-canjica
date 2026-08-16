@@ -54,7 +54,15 @@ export const handler: Handler = async (event) => {
     // 🔴 ROTA POST: Salva ou atualiza a rotina
     if (event.httpMethod === 'POST') {
       const payload = JSON.parse(event.body || '{}');
-      const { data, tutor, p1, p2, p3, p4, obs } = payload;
+      
+      // TRAVA DE SEGURANÇA: (|| '') garante que nunca enviamos 'undefined' para o SQL
+      const data = payload.data || '';
+      const tutor = payload.tutor || '';
+      const p1 = payload.p1 || '';
+      const p2 = payload.p2 || '';
+      const p3 = payload.p3 || '';
+      const p4 = payload.p4 || '';
+      const obs = payload.obs || '';
 
       const query = `
         INSERT INTO rotina_passeios (data_registro, tutor, p1, p2, p3, p4, observacoes)
