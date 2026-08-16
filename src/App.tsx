@@ -41,21 +41,6 @@ export default function App() {
     new Date().toLocaleDateString('pt-BR')
   );
 
-  const carregarHistorico = async () => {
-    setLoadingTabela(true);
-    setShowTabela(true);
-    try {
-      const response = await fetch('/api/passeios');
-      if (response.ok) {
-        const data = await response.json();
-        setHistorico(data);
-      }
-    } catch (err) {
-      console.error('Erro ao buscar histórico:', err);
-    } finally {
-      setLoadingTabela(false);
-    }
-  };
 
   const [tutor, setTutor] = useState<Tutor>(() => {
     const t = sanitize(localStorage.getItem('canjica_tutor'));
@@ -209,9 +194,23 @@ export default function App() {
     };
   }, []);
 
-  const enviarPlanilha = () => {
-    // 1. Apontamos para a sua nova API interna da Netlify (Serverless Function)
   const API_URL = '/.netlify/functions/passeios';
+
+  const carregarHistorico = async () => {
+    setLoadingTabela(true);
+    setShowTabela(true);
+    try {
+      const response = await fetch(API_URL); // <-- Atualizado aqui
+      if (response.ok) {
+        const data = await response.json();
+        setHistorico(data.slice(0, 5));
+      }
+    } catch (err) {
+      console.error('Erro ao buscar histórico:', err);
+    } finally {
+      setLoadingTabela(false);
+    }
+  };
 
   const enviarParaBanco = async (passoEditado?: number, ehApagar = false) => {
     setIsLoading(true);
@@ -228,52 +227,40 @@ export default function App() {
       return '';
     };
 
-    // 2. Montamos o pacote de dados limpo em formato JSON
+    // PACOTE BLINDADO: Garante que todos os 7 campos vão preenchidos
     const payload = {
       data: diaHoje,
-      tutor: tutor,
+      tutor: tutor || '',
       p1: formatarCampo(passeios[0], 0),
       p2: formatarCampo(passeios[1], 1),
       p3: formatarCampo(passeios[2], 2),
       p4: formatarCampo(passeios[3], 3),
-      // (Opcional) A lógica de calcular "obs_ontem" que você já tem pode ser passada aqui
+      obs: alerta.show ? alerta.text : '🐾 Rotina em andamento...' // Se houver alerta de atraso, ele guarda no banco!
     };
 
     try {
-      // 3. Chamada nativa e moderna, sem necessidade de 'no-cors'
-      const response = await fetch(API_URL, {
+      const response = await fetch(API_URL, { // <-- Atualizado aqui
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
-      // 4. Tratamento REAL de resposta do servidor
       if (!response.ok) {
         throw new Error('Falha na gravação do banco de dados');
       }
 
-      setStatus({
-        text: 'Salvo na base de dados ✔️',
-        class: 'status-salvo',
-      });
-
+      setStatus({ text: 'Salvo na base de dados ✔️', class: 'status-salvo' });
       setTimeout(() => {
         setStatus({ text: 'Nuvem atualizada ✔️', class: 'status-salvo' });
       }, 2500);
 
     } catch (error) {
       console.error(error);
-      setStatus({
-        text: '⚠️ Erro de conexão com o banco',
-        class: 'status-salvo',
-      });
+      setStatus({ text: '⚠️ Erro de conexão com o banco', class: 'status-salvo' });
       document.getElementById('status-salvamento')!.style.color = '#ff4d4d';
     } finally {
       setIsLoading(false);
     }
-  };
   };
 
   const handleTimeChange = (index: number, val: string) => {
@@ -281,7 +268,7 @@ export default function App() {
     newP[index] = val;
     setPasseios(newP);
     if (isValidTime(val) || val === '')
-      enviarPlanilha(newP, val === '' ? index + 1 : null);
+    enviarParaBanco(newP, val === '' ? index + 1 : null);
   };
 
   const preencherAgora = (index: number) => {
@@ -296,7 +283,7 @@ export default function App() {
     const newP = [...passeios];
     newP[index] = '';
     setPasseios(newP);
-    enviarPlanilha(newP, index + 1);
+    enviarParaBanco(newP, index + 1);
   };
 
   const addTime = (
