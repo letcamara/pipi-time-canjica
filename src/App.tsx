@@ -278,26 +278,33 @@ const isValidTime = (val: string): boolean => {
   };
 
   const handleTimeChange = (index: number, val: string) => {
-    const newP = [...passeios];
-    newP[index] = val;
-    setPasseios(newP);
-    if (isValidTime(val) || val === '')
-    enviarParaBanco(index, false);
+    const novosPasseios = [...passeios]; // Cria uma cópia da lista
+    novosPasseios[index] = val;          // Atualiza a hora na cópia
+    setPasseios(novosPasseios);          // Manda atualizar a tela visualmente
+    
+    // Manda os dados FRESCOS para o banco imediatamente
+    enviarParaBanco(novosPasseios, index, false); 
   };
 
   const preencherAgora = (index: number) => {
     const agora = new Date();
-    const val = `${String(agora.getHours()).padStart(2, '0')}:${String(
-      agora.getMinutes()
-    ).padStart(2, '0')}`;
-    handleTimeChange(index, val);
+    const h = String(agora.getHours()).padStart(2, '0');
+    const m = String(agora.getMinutes()).padStart(2, '0');
+    const val = `${h}:${m}`;
+
+    const novosPasseios = [...passeios];
+    novosPasseios[index] = val;
+    setPasseios(novosPasseios);
+    
+    enviarParaBanco(novosPasseios, index, false);
   };
 
   const apagar = (index: number) => {
-    const newP = [...passeios];
-    newP[index] = '';
-    setPasseios(newP);
-    enviarParaBanco(index, true);
+    const novosPasseios = [...passeios];
+    novosPasseios[index] = '';
+    setPasseios(novosPasseios);
+    
+    enviarParaBanco(novosPasseios, index, true);
   };
 
   const addTime = (
