@@ -98,3 +98,32 @@ input::-webkit-date-and-time-value { margin: 0 !important; }
   cursor: pointer;
 }
 .btn-planilha:hover { background-color: #323238; border-color: #ff9f43; color: #ff9f43; }
+
+/* --- COMPONENTE LOADING --- */
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+  height: 220px;
+  position: absolute;
+  background: rgba(32, 32, 36, 0.9); /* O tal efeito de vidro translúcido */
+  z-index: 10;
+  border-radius: 8px;
+}
+
+.spinner {
+  width: 45px;
+  height: 45px;
+  border: 5px solid #29292e;
+  border-top: 5px solid #ff9f43;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

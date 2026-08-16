@@ -16,6 +16,7 @@ interface AlertaState {
 }
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   const sanitize = (val: string | null): string =>
@@ -60,6 +61,7 @@ export default function App() {
 
   // 🔄 2. CARREGA OS DADOS DA PLANILHA AO ABRIR A APP
   useEffect(() => {
+    setIsLoading(true);
     const scriptOculto =
       'aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J6bG9Qd09SMzgyVVpWNEJYWVBqb012M2tnZm5kcXZINXJ6UXdGSGJSdm01RjlNRWE2RVgwMDBWbXJ6LUVVakNwV3gvZXhlYw==';
     const url = `${atob(scriptOculto)}?data=${encodeURIComponent(diaHoje)}`;
@@ -84,7 +86,9 @@ export default function App() {
             localStorage.setItem(`canjica_p${i + 1}`, p)
           );
           setStatus({ text: 'Nuvem atualizada ✔️', class: 'status-salvo' });
+          setIsLoading(false);
         } else {
+          setIsLoading(false);
           throw new Error('Sem registro');
         }
       })
@@ -94,6 +98,7 @@ export default function App() {
         );
         setPasseios(local);
         setStatus({ text: 'Nuvem atualizada ✔️', class: 'status-salvo' });
+        setIsLoading(false);
       });
   }, [diaHoje]);
 
@@ -180,10 +185,10 @@ export default function App() {
     passoApagado: number | null = null
   ) => {
     setStatus({
-      text: '⏳ A guardar...',
+      text: '⏳ Salvando...',
       class: 'status-salvo status-salvando',
     });
-
+    setIsLoading(true)
     const dataOntem = sanitize(localStorage.getItem('canjica_data_ontem'));
     const ultimoOntem = sanitize(localStorage.getItem('canjica_ultimo_ontem'));
     let obsOntem = '';
@@ -232,6 +237,7 @@ export default function App() {
 
       setTimeout(() => {
         setStatus({ text: 'Salvo na nuvem ✔️', class: 'status-salvo' });
+        setIsLoading(false)
       }, 1200);
     }
   };
@@ -346,6 +352,12 @@ export default function App() {
           <div className={status.class}>{status.text}</div>
           <div className="dia-hoje">{diaHoje}</div>
         </div>
+
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="spinner"></div>
+        </div>
+      )}
 
         {alerta.show && <div className={alerta.class}>{alerta.text}</div>}
 
