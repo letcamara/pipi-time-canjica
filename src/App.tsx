@@ -230,20 +230,20 @@ const isValidTime = (val: string): boolean => {
       class: 'status-salvo status-salvando',
     });
 
-    const t_inicial = tutor === 'Leticia' ? '[L]' : tutor === 'Nassar' ? '[N]' : '';
+    // 👇 O SEGREDO É APAGAR O t_inicial QUE FICAVA AQUI FORA A SOBRAR!
 
     const formatarCampo = (valor: string, passoAtual: number) => {
       if (ehApagar && passoAtual === passoEditado) return 'APAGAR';
       
       const horaPura = extrairHoraPura(valor);
       if (horaPura && isValidTime(horaPura)) {
+        // A tag inicial agora vive apenas aqui dentro, onde é realmente usada:
         const t_inicial = tutor === 'Leticia' ? '[L]' : tutor === 'Nassar' ? '[N]' : '';
         return `${horaPura} ${t_inicial}`.trim();
       }
       return '';
     };
 
-    // PACOTE BLINDADO: Garante que todos os 7 campos vão preenchidos
     const payload = {
       data: diaHoje,
       tutor: tutor || '',
@@ -251,11 +251,11 @@ const isValidTime = (val: string): boolean => {
       p2: formatarCampo(passeios[1], 1),
       p3: formatarCampo(passeios[2], 2),
       p4: formatarCampo(passeios[3], 3),
-      obs: alerta.show ? alerta.text : '🐾 Rotina em andamento...' // Se houver alerta de atraso, ele guarda no banco!
+      obs: alerta.show ? alerta.text : '🐾 Rotina em andamento...'
     };
 
     try {
-      const response = await fetch(API_URL, { // <-- Atualizado aqui
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
