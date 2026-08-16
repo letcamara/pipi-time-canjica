@@ -127,3 +127,95 @@ input::-webkit-date-and-time-value { margin: 0 !important; }
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* --- MODAL DA TABELA --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.modal-content {
+  background-color: #202024;
+  border: 1px solid #29292e;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #323238;
+  padding-bottom: 10px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #ff9f43;
+}
+
+.btn-fechar {
+  background: transparent;
+  border: none;
+  color: #7c7c8a;
+  font-size: 20px;
+  cursor: pointer;
+}
+.btn-fechar:hover {
+  color: #ff4d4d;
+}
+
+.tabela-wrapper {
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+/* --- ESTILO DA TABELA --- */
+.tabela-historico {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.tabela-historico th,
+.tabela-historico td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid #29292e;
+}
+
+.tabela-historico th {
+  background-color: #1a1a1e;
+  color: #ff9f43;
+  position: sticky;
+  top: 0;
+}
+
+.tabela-historico tr:hover {
+  background-color: #29292e;
+}
+
+.modal-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  color: #7c7c8a;
+}

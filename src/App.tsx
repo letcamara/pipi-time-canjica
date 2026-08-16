@@ -9,6 +9,15 @@ interface StatusState {
   class: string;
 }
 
+interface RegistroHistorico {
+  data_registro: string;
+  p1: string;
+  p2: string;
+  p3: string;
+  p4: string;
+  observacoes: string;
+}
+
 interface AlertaState {
   show: boolean;
   text: string;
@@ -19,6 +28,10 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
+  const [showTabela, setShowTabela] = useState(false);
+  const [historico, setHistorico] = useState<RegistroHistorico[]>([]);
+  const [loadingTabela, setLoadingTabela] = useState(false);
+
   const sanitize = (val: string | null): string =>
     val ? val.replace(/[<>]/g, '') : '';
   const isValidTime = (val: string): boolean =>
@@ -27,6 +40,22 @@ export default function App() {
   const [diaHoje] = useState<string>(() =>
     new Date().toLocaleDateString('pt-BR')
   );
+
+  const carregarHistorico = async () => {
+    setLoadingTabela(true);
+    setShowTabela(true);
+    try {
+      const response = await fetch('/api/passeios');
+      if (response.ok) {
+        const data = await response.json();
+        setHistorico(data);
+      }
+    } catch (err) {
+      console.error('Erro ao buscar histórico:', err);
+    } finally {
+      setLoadingTabela(false);
+    }
+  };
 
   const [tutor, setTutor] = useState<Tutor>(() => {
     const t = sanitize(localStorage.getItem('canjica_tutor'));
@@ -383,6 +412,68 @@ export default function App() {
         >
           Link para a planilha
         </button>
+        <button 
+        type="button" 
+        className="btn-planilha" 
+        onClick={carregarHistorico}
+      >
+        📊 Ver Tabela de Registros
+      </button>
+
+      {showTabela && (
+        <div className="modal-overlay" onClick={() => setShowTabela(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Histórico de Passeios 🐾</h3>
+              <button className="btn-fechar" onClick={() => setShowTabela(false)}>✕</button>
+            </div>
+
+            {loadingTabela ? (
+              <div className="modal-loading">
+                <div className="spinner"></div>
+                <p>A carregar histórico...</p>
+              </div>
+            ) : (
+              <div className="tabela-wrapper">
+                <table className="tabela-historico">
+                  <thead>
+                    <tr>
+                      <th>Data</th>
+                      <th>1º</th>
+                      <th>2º</th>
+                      <th>3º</th>
+                      <th>4º</th>
+                      <th>Observações</th> {/* <-- Cabeçalho adicionado */}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {historico.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} style={{ textAlign: 'center' }}>
+                          Nenhum registro encontrado.
+                        </td>
+                      </tr>
+                    ) : (
+                      historico.map((row, index) => (
+                        <tr key={index}>
+                          <td>{row.data_registro}</td>
+                          <td>{row.p1 || '-'}</td>
+                          <td>{row.p2 || '-'}</td>
+                          <td>{row.p3 || '-'}</td>
+                          <td>{row.p4 || '-'}</td>
+                          <td style={{ textAlign: 'left', fontSize: '0.85em', minWidth: '140px' }}>
+                            {row.observacoes || '-'} {/* <-- Coluna com as observações */}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       </div>
     </>
   );
