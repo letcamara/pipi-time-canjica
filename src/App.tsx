@@ -34,8 +34,19 @@ export default function App() {
 
   const sanitize = (val: string | null): string =>
     val ? val.replace(/[<>]/g, '') : '';
-  const isValidTime = (val: string): boolean =>
-    /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(val);
+
+// 1. Extrai apenas a hora no formato HH:mm (remove [L], [N] e segundos)
+const extrairHoraPura = (val: string | null): string => {
+  if (!val) return '';
+  const match = val.match(/(\d{2}:\d{2})/);
+  return match ? match[1] : '';
+};
+
+// 2. Valida se a string é uma hora válida
+const isValidTime = (val: string): boolean => {
+  const hora = extrairHoraPura(val);
+  return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(hora);
+};
 
   const [diaHoje] = useState<string>(() =>
     new Date().toLocaleDateString('pt-BR')
@@ -223,7 +234,12 @@ export default function App() {
 
     const formatarCampo = (valor: string, passoAtual: number) => {
       if (ehApagar && passoAtual === passoEditado) return 'APAGAR';
-      if (valor && isValidTime(valor)) return `${valor} ${t_inicial}`.trim();
+      
+      const horaPura = extrairHoraPura(valor);
+      if (horaPura && isValidTime(horaPura)) {
+        const t_inicial = tutor === 'Leticia' ? '[L]' : tutor === 'Nassar' ? '[N]' : '';
+        return `${horaPura} ${t_inicial}`.trim();
+      }
       return '';
     };
 
