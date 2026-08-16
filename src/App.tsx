@@ -304,7 +304,7 @@ export default function App() {
       <div className="container">
         <h2>Pipi Time da Canjica 🐾</h2>
         <div className="tela-tutor">
-          <p style={{ marginTop: 0 }}>Quem está a usar este telemóvel?</p>
+          <p style={{ marginTop: 0 }}>Quem está neste App?</p>
           <button className="btn-tutor" onClick={() => salvarTutor('Leticia')}>
             Letícia
           </button>

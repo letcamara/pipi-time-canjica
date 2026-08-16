@@ -1,32 +1,31 @@
-# React + TypeScript + Vite
+# 🐾 Canjica's Pipi Time Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A lightweight, mobile-first web application designed to track, manage, and optimize daily walking schedules and urinary retention times for a canine companion named Canjica. Built with a minimalist Dark Mode UI, it features real-time cloud synchronization via Google Sheets and an intelligent step-by-step workflow for multiple pet tutors.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Key Features
 
-## React Compiler
+- **Smart Workflow & Progressive Step Guidance:** The application enforces chronological tracking. Inputs for future walks are automatically disabled and visually subdued until the current step is completed.
+- **Multi-Tutor Accountability:** Supports multiple pet parents (**Leticia** and **Nassar**). Each log automatically records the tutor's initial (e.g., `05:30 [L]` or `16:40 [N]`) directly into the corresponding Google Sheets columns.
+- **Automated Retention Health Alerts:** Continuously monitors the time elapsed since the last walk. Triggers visual warnings if retention approaches or exceeds safe physiological thresholds (e.g., >8 hours warning, >10 hours critical alert).
+- **Real-Time Cloud Synchronization:** Seamlessly communicates with a Google Apps Script backend to log entries, update existing daily records, or clear data dynamically without page reloads.
+- **Quick-Action Controls:** - ⚡ **Lightning Button:** Instantly captures and logs the current system timestamp.
+  - 🗑️ **Trash Button:** Clears and removes records from the cloud instantly.
+- **Cross-Device Persistence:** Leverages local browser storage (`localStorage`) to maintain state across sessions and handle day-to-day transitions cleanly.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the Oxlint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+- **Frontend:** Pure HTML5, CSS3 (Modern Flexbox & Grid, CSS Variables, Responsive Dark Theme), and Vanilla JavaScript (ES6+).
+- **Backend & Storage:** Google Apps Script (`doPost` API) acting as a secure bridge between the web app and Google Sheets.
+- **Hosting / Deployment:** Static file hosting compatible (Netlify, Vercel, or custom cPanel).
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+---
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## 📂 Project Structure
+
+```text
+├── canjica.html         # Main single-page application frontend
+└── AppsScript.js        # Google Apps Script backend controller for Google Sheets
