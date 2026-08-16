@@ -223,21 +223,19 @@ const isValidTime = (val: string): boolean => {
     }
   };
 
-  const enviarParaBanco = async (passoEditado?: number, ehApagar = false) => {
+  // 👇 1. Agora ela recebe "passeiosAtualizados" como primeiro parâmetro
+  const enviarParaBanco = async (passeiosAtualizados: string[], passoEditado?: number, ehApagar = false) => {
     setIsLoading(true);
     setStatus({
       text: '⏳ A gravar...',
       class: 'status-salvo status-salvando',
     });
 
-    // 👇 O SEGREDO É APAGAR O t_inicial QUE FICAVA AQUI FORA A SOBRAR!
-
     const formatarCampo = (valor: string, passoAtual: number) => {
       if (ehApagar && passoAtual === passoEditado) return 'APAGAR';
       
       const horaPura = extrairHoraPura(valor);
       if (horaPura && isValidTime(horaPura)) {
-        // A tag inicial agora vive apenas aqui dentro, onde é realmente usada:
         const t_inicial = tutor === 'Leticia' ? '[L]' : tutor === 'Nassar' ? '[N]' : '';
         return `${horaPura} ${t_inicial}`.trim();
       }
@@ -247,10 +245,11 @@ const isValidTime = (val: string): boolean => {
     const payload = {
       data: diaHoje,
       tutor: tutor || '',
-      p1: formatarCampo(passeios[0], 0),
-      p2: formatarCampo(passeios[1], 1),
-      p3: formatarCampo(passeios[2], 2),
-      p4: formatarCampo(passeios[3], 3),
+      // 👇 2. Lê os valores FRESCOS que acabaram de ser digitados
+      p1: formatarCampo(passeiosAtualizados[0], 0),
+      p2: formatarCampo(passeiosAtualizados[1], 1),
+      p3: formatarCampo(passeiosAtualizados[2], 2),
+      p4: formatarCampo(passeiosAtualizados[3], 3),
       obs: alerta.show ? alerta.text : '🐾 Rotina em andamento...'
     };
 
@@ -273,7 +272,6 @@ const isValidTime = (val: string): boolean => {
     } catch (error) {
       console.error(error);
       setStatus({ text: '⚠️ Erro de conexão com o banco', class: 'status-salvo' });
-      document.getElementById('status-salvamento')!.style.color = '#ff4d4d';
     } finally {
       setIsLoading(false);
     }
