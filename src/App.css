@@ -1,0 +1,79 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121214;
+  color: #e1e1e6;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+.container {
+  background-color: #202024;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid #29292e;
+}
+h2 { text-align: center; color: #ff9f43; margin-top: 0; margin-bottom: 25px; }
+
+.tela-tutor { text-align: center; margin-bottom: 20px; padding: 20px; background-color: #1a1a1e; border-radius: 8px; border: 1px solid #ff9f43; }
+.btn-tutor { background-color: transparent; color: #ff9f43; border: 1px solid #ff9f43; padding: 10px 20px; margin: 5px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.btn-tutor:hover { background-color: #ff9f43; color: #121214; }
+
+.barra-topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #464646; }
+.status-salvo { font-size: 0.85em; color: #464646; font-weight: 500; transition: color 0.3s; }
+.status-salvando { color: #ff9f43; }
+.status-erro { color: #ff4d4d; }
+.dia-hoje { color: #7c7c8a; font-size: 0.9em; font-weight: 500; }
+
+.caixa-alerta { padding: 15px; border-radius: 8px; margin-bottom: 25px; text-align: center; font-size: 0.95em; font-weight: 600; animation: piscar 2s infinite alternate; }
+.alerta-laranja { background-color: #4a2b12; border: 1px solid #ff9f43; color: #ff9f43; }
+.alerta-vermelho { background-color: #4a1212; border: 1px solid #ff4d4d; color: #ff4d4d; }
+@keyframes piscar { 0% { opacity: 1; } 100% { opacity: 0.8; } }
+
+.input-group { margin-bottom: 20px; transition: 0.3s; }
+.input-linha { display: flex; gap: 8px; align-items: center; }
+
+label { font-weight: bold; color: #323238; transition: color 0.3s; white-space: nowrap; font-size: 0.95em; }
+label.proximo { color: #626262; }
+
+input {
+  flex: 1; min-width: 0; height: 42px; padding: 10px; font-size: 16px;
+  border-radius: 8px; box-sizing: border-box; color: #ff9f43;
+  font-weight: 600; transition: background-color 0.3s, border-color 0.3s;
+  border-top: none; border-left: none; border-right: none;
+  border-bottom: none; margin-right: 10px; background-color: #232323;
+}
+input::placeholder { color: #323238; font-weight: 500; }
+
+label.proximo + input { border-bottom: none; background-color: #29292e; border: 1px solid #323238; }
+label.proximo + input::placeholder { color: #626262; }
+input:focus { outline: none; border: 1px solid #ff9f43; background-color: #1a1a1e; }
+input.preenchido { background-color: #202024 !important; border: none !important; }
+input::-webkit-calendar-picker-indicator { display: none !important; -webkit-appearance: none; }
+
+.btn-icone {
+  background-color: #29292e; color: #e1e1e6; border: 1px solid #323238;
+  border-radius: 8px; width: 42px; height: 42px; display: flex;
+  align-items: center; justify-content: center; font-size: 1.1em; cursor: pointer; transition: 0.2s; flex-shrink: 0;
+}
+.btn-icone:hover:not(:disabled) { background-color: #323238; border-color: #ff9f43; }
+.btn-icone:active:not(:disabled) { transform: scale(0.92); }
+
+.btn-apagar { color: #888; display: none; }
+.btn-apagar:hover:not(:disabled) { background-color: #4a1212; border-color: #ff4d4d; color: #ff4d4d; }
+
+.grupo-desabilitado { opacity: 0.4; }
+.grupo-desabilitado input { cursor: not-allowed !important; }
+.grupo-desabilitado button { opacity: 0; pointer-events: none; cursor: not-allowed !important; }
+
+.btn-planilha {
+  display: block; width: 100%; padding: 12px; margin-top: 15px;
+  background-color: #29292e; color: #565656; border: 1px solid #323238;
+  border-radius: 8px; font-size: 15px; font-weight: bold; text-align: center;
+  text-decoration: none; box-sizing: border-box; transition: 0.2s;
+  cursor: pointer;
+}
+.btn-planilha:hover { background-color: #323238; border-color: #ff9f43; color: #ff9f43; }
