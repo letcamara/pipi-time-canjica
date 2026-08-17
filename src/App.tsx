@@ -416,7 +416,7 @@ const isValidTime = (val: string): boolean => {
         className="btn-planilha" 
         onClick={carregarHistorico}
       >
-        📊 Ver Tabela de Registros
+        Ver Histórico de Passeios
       </button>
 
       {showTabela && (
@@ -442,7 +442,7 @@ const isValidTime = (val: string): boolean => {
                       <th>2º</th>
                       <th>3º</th>
                       <th>4º</th>
-                      <th>Observações</th> {/* <-- Cabeçalho adicionado */}
+                      <th>Observações</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -453,18 +453,26 @@ const isValidTime = (val: string): boolean => {
                         </td>
                       </tr>
                     ) : (
-                      historico.map((row, index) => (
-                        <tr key={index}>
-                          <td>{row.data_registro}</td>
-                          <td>{row.p1 || '-'}</td>
-                          <td>{row.p2 || '-'}</td>
-                          <td>{row.p3 || '-'}</td>
-                          <td>{row.p4 || '-'}</td>
-                          <td style={{ textAlign: 'left', fontSize: '0.85em', minWidth: '140px' }}>
-                            {row.observacoes || '-'} {/* <-- Coluna com as observações */}
-                          </td>
-                        </tr>
-                      ))
+                      historico.map((row, index) => {
+                        // Verifica se a data da linha é exatamente a data de hoje
+                        const ehHoje = row.data_registro === diaHoje;
+
+                        return (
+                          <tr 
+                            key={index} 
+                            style={{ color: ehHoje ? '#a0a0a0' : '#3e3e3e' }}
+                          >
+                            <td>{row.data_registro}</td>
+                            <td>{row.p1 || '-'}</td>
+                            <td>{row.p2 || '-'}</td>
+                            <td>{row.p3 || '-'}</td>
+                            <td>{row.p4 || '-'}</td>
+                            <td style={{ textAlign: 'left', fontSize: '0.85em', minWidth: '140px' }}>
+                              {row.observacoes || '-'}
+                            </td>
+                          </tr>
+                        );
+                      })
                     )}
                   </tbody>
                 </table>

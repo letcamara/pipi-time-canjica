@@ -149,7 +149,6 @@ input::-webkit-date-and-time-value { margin: 0 !important; }
   border: 1px solid #29292e;
   border-radius: 12px;
   width: 100%;
-  max-width: 500px;
   max-height: 80vh;
   display: flex;
   flex-direction: column;
